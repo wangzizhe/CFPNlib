@@ -1,0 +1,39 @@
+within CFPNlib.Examples.CoffeeMaker;
+model CoffeeMaker
+  import CFPNlib.Components.FeaturePN.FeaturePlace;
+  import CFPNlib.Components.FeaturePN.FeatureTransitionTimeEvent;
+
+  // Feature Places for Coffee Maker
+  FeaturePlace brewing(startTokens = 0, nIn = 1, nOut = 1) "Brewing state";
+  FeaturePlace grinding(startTokens = 0, nIn = 1, nOut = 1) "Grinding state";
+  FeaturePlace steaming(startTokens = 0, nIn = 1, nOut = 1) "Steaming state";
+
+  // Events for transitions - specify as Real time points
+  parameter Real brewingEventTimes[2] = {10, 15} "Times for starting and stopping brewing";
+  parameter Real grindingEventTimes[2] = {30, 35} "Times for starting and stopping grinding";
+  parameter Real steamingEventTimes[2] = {20, 25} "Times for starting and stopping steaming";
+
+  // Feature Transitions for Coffee Maker with integrated trigger conditions
+  FeatureTransitionTimeEvent startBrewing(nOut = 1, event = {brewingEventTimes[1]}) "Start brewing transition";
+  FeatureTransitionTimeEvent stopBrewing(nIn = 1, event = {brewingEventTimes[2]}) "Stop brewing transition";
+
+  FeatureTransitionTimeEvent startGrinding(nOut = 1, event = {grindingEventTimes[1]}) "Start grinding transition";
+  FeatureTransitionTimeEvent stopGrinding(nIn = 1, event = {grindingEventTimes[2]}) "Stop grinding transition";
+
+  FeatureTransitionTimeEvent startSteaming(nOut = 1, event = {steamingEventTimes[1]}) "Start steaming transition";
+  FeatureTransitionTimeEvent stopSteaming(nIn = 1, event = {steamingEventTimes[2]}) "Stop steaming transition";
+
+equation
+  // Connections for brewing state
+  connect(startBrewing.outPlaces[1], brewing.inTransition[1]);
+  connect(stopBrewing.inPlaces[1], brewing.outTransition[1]);
+
+  // Connections for grinding state
+  connect(startGrinding.outPlaces[1], grinding.inTransition[1]);
+  connect(stopGrinding.inPlaces[1], grinding.outTransition[1]);
+
+  // Connections for steaming state
+  connect(startSteaming.outPlaces[1], steaming.inTransition[1]);
+  connect(stopSteaming.inPlaces[1], steaming.outTransition[1]);
+
+end CoffeeMaker;
