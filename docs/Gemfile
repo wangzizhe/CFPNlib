@@ -4,4 +4,4 @@ source "https://rubygems.org"
 gem "jekyll", "~> 4.3.4"
 
 # Specify the theme
-gem "just-the-docs"
+gem "just-the-docs (= 0.10.0)"
