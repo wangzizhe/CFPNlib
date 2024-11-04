@@ -32,9 +32,9 @@ This example simulates a coffee maker with three main functions—brewing, grind
 
 - **UserAction**: Simulates user inputs (button presses) that activate each feature for specific time durations.
 - **FeatureSwitch**: Uses feature-based transitions to ensure each feature runs independently, avoiding conflicts. For example, grinding and steaming cannot run simultaneously due to exclusive activation.
-  - **Feature 1:** Brewing
-  - **Feature 2:** Grinding
-  - **Feature 3:** Steaming
+  - **Feature 1**: Brewing
+  - **Feature 2**: Grinding
+  - **Feature 3**: Steaming
 - **CoffeeMaker**: The main integration model that brings together the components to simulate a functioning coffee maker with independent and exclusive feature management.
 
 ### Result
@@ -57,15 +57,12 @@ This example models an energy-efficient system that manages power generation and
 
 - **ModularComputer**: Consumes hydrogen-based electricity based on different operational modes (energy-saving, normal, and performance) and adjusts power consumption according to hydrogen availability.
 
-- ContextSwitch
-
-  : Manages context switching for the system based on hydrogen levels:
-
+- **ContextSwitch**: Manages context switching for the system based on hydrogen levels:
   - **Energy-Saving Mode**: Activated when hydrogen levels are low, minimizing power consumption.
   - **Normal Mode**: Enabled when hydrogen levels are moderate.
     - **Nested Load Levels**: (Low, Medium, High) adjust power usage within the performance mode.
   - **Performance Mode**: Engaged when hydrogen levels are high, allowing for maximum power consumption.
-
+  
 - **GreenIT**: The main integration model that coordinates all components, simulating an energy-efficient IT system.
 
 <img src="../assets/GreenIT-ControlLayer.png" style="zoom: 25%;" />
