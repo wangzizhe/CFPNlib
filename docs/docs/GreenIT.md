@@ -27,7 +27,7 @@ This example models an energy-efficient system that manages power generation and
 
 Below is the complete control logic in the **Control Layer**, with the underlying Petri Nets fully hidden from the modeler’s view.
 
-<img src="../assets/CFPN_GreenIT_example.png" style="zoom: 25%;" />
+<img src="../assets/CFPN_GreenIT_example.png" style="zoom: 50%;" />
 
 <img src="../assets/GreenIT-SystemLayer.png" style="zoom: 25%;" />
 
