@@ -13,18 +13,9 @@ model SmartHome
   ContextSwitch contextSwitch;
 
 equation
-  // Connect context state outputs from ContextSwitch to feature models
-  lightModel.isDay = contextSwitch.isDay;
-  lightModel.isEvening = contextSwitch.isEvening;
-  lightModel.isNight = contextSwitch.isNight;
+  // Connect contextSwitch outputs directly to feature model inputs
+  lightModel.V_input = contextSwitch.V_input;
+  heatingModel.heatPower_input = contextSwitch.heatPower_input;
+  securityModel.securityActive_input = contextSwitch.securityActive_input;
 
-  heatingModel.isDay = contextSwitch.isDay;
-  heatingModel.isEvening = contextSwitch.isEvening;
-  heatingModel.isNight = contextSwitch.isNight;
-
-  securityModel.isNight = contextSwitch.isNight;
-
-  annotation (
-    uses(PNlib(version = "3.0.0"), Modelica(version = "4.0.0"))
-  );
 end SmartHome;

@@ -1,4 +1,5 @@
 within CFPNlib.Examples;
+
 package CoffeeMaker "An example using FeaturePlace and FeatureTransitionConditionEvent for feature management."
 
 annotation (

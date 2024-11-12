@@ -1,86 +1,55 @@
 within CFPNlib.Examples.GreenIT;
 
 model ContextSwitch "Context management for GreenIT system with nested load levels"
-  import CFPNlib.Components.ContextPN.ContextPlaceNested;
-  import CFPNlib.Components.ContextPN.ContextTransitionConditionEvent;
+  import CFPNlib.Components.Composite.ContextWithConditionEvent;
 
-  // Inputs
+  // Input the hydrogen level from HydrogenTank
   input Real hydrogenLevel "Current hydrogen level from HydrogenTank";
+  // Output the power demand factor for ModularComputer
+  output Real powerDemandFactor;
 
-  // Define Context Places for Energy Modes
-  ContextPlaceNested energySavingMode(
+  // Define Contexts for Energy Modes
+  ContextWithConditionEvent energySavingMode(
     contextName = "EnergySavingMode", 
-    startTokens = 0, 
-    nIn = 1, 
-    exclusionContexts = {"NormalMode", "PerformanceMode"}
-  );
-  ContextPlaceNested normalMode(
+    activationCondition = (hydrogenLevel < 20.0)
+  ) "Energy-saving mode for low hydrogen levels";
+
+  ContextWithConditionEvent normalMode(
     contextName = "NormalMode", 
-    startTokens = 0, 
-    nIn = 1, 
-    exclusionContexts = {"EnergySavingMode", "PerformanceMode"}
-  );
-  ContextPlaceNested performanceMode(
+    activationCondition = (hydrogenLevel >= 20.0 and hydrogenLevel < 80.0)
+  ) "Normal operation mode for moderate hydrogen levels";
+
+  ContextWithConditionEvent performanceMode(
     contextName = "PerformanceMode", 
-    startTokens = 0, 
-    nIn = 1, 
-    exclusionContexts = {"EnergySavingMode", "NormalMode"}
-  );
-  
-  // Define Transitions between Contexts based on Hydrogen Level
-  ContextTransitionConditionEvent activateEnergySavingMode(
-    targetContext = "EnergySavingMode", 
-    nOut = 1,
-    firingCon = hydrogenLevel < 20.0);
+    activationCondition = (hydrogenLevel >= 80.0)
+  ) "High-performance mode for high hydrogen levels";
 
-  ContextTransitionConditionEvent activateNormalMode(
-    targetContext = "NormalMode", 
-    nOut = 1,
-    firingCon = hydrogenLevel >= 20.0 and hydrogenLevel < 80.0);
+  // Nested Load Levels within Normal Mode
+  ContextWithConditionEvent lowLoad(
+    contextName = "LowLoad", 
+    parentContext = "NormalMode", 
+    activationCondition = (hydrogenLevel >= 20.0 and hydrogenLevel < 40.0)
+  ) "Low load mode within NormalMode";
 
-  ContextTransitionConditionEvent activatePerformanceMode(
-    targetContext = "PerformanceMode", 
-    nOut = 1,
-    firingCon = hydrogenLevel >= 80.0);
+  ContextWithConditionEvent mediumLoad(
+    contextName = "MediumLoad", 
+    parentContext = "NormalMode", 
+    activationCondition = (hydrogenLevel >= 40.0 and hydrogenLevel < 60.0)
+  ) "Medium load mode within NormalMode";
 
-  // Load level management within Performance Mode
-  ContextPlaceNested lowLoad(contextName = "LowLoad", startTokens = 0, parentContext = "NormalMode", nIn = 1);
-  ContextPlaceNested mediumLoad(contextName = "MediumLoad", startTokens = 0, parentContext = "NormalMode", nIn = 1);
-  ContextPlaceNested highLoad(contextName = "HighLoad", startTokens = 0, parentContext = "NormalMode", nIn = 1);
-
-  // Transitions for Load Levels
-  ContextTransitionConditionEvent activateLowLoad(
-    targetContext = "LowLoad", 
-    nOut = 1,
-    firingCon = hydrogenLevel >= 20.0 and hydrogenLevel < 40.0);
-
-  ContextTransitionConditionEvent activateMediumLoad(
-    targetContext = "MediumLoad", 
-    nOut = 1,
-    firingCon = hydrogenLevel >= 40.0 and hydrogenLevel < 60.0);
-
-  ContextTransitionConditionEvent activateHighLoad(
-    targetContext = "HighLoad", 
-    nOut = 1,
-    firingCon = hydrogenLevel >= 60.0 and hydrogenLevel < 80.0);
-
-  // Outputs for current context states
-  output Boolean isEnergySaving = activateEnergySavingMode.active;
-  output Boolean isNormal = activateNormalMode.active;
-  output Boolean isPerformance = activatePerformanceMode.active;
-  output Boolean isLowLoad = activateLowLoad.active;
-  output Boolean isMediumLoad = activateMediumLoad.active;
-  output Boolean isHighLoad = activateHighLoad.active;
+  ContextWithConditionEvent highLoad(
+    contextName = "HighLoad", 
+    parentContext = "NormalMode", 
+    activationCondition = (hydrogenLevel >= 60.0 and hydrogenLevel < 80.0)
+  ) "High load mode within NormalMode";
 
 equation
-  // Connections for activating EnergySavingMode, NormalMode, PerformanceMode
-  connect(activateEnergySavingMode.outPlaces[1], energySavingMode.inTransition[1]);
-  connect(activateNormalMode.outPlaces[1], normalMode.inTransition[1]);
-  connect(activatePerformanceMode.outPlaces[1], performanceMode.inTransition[1]);
-
-  // Connections for nested load levels within NormalMode (Low, Medium, High)
-  connect(activateLowLoad.outPlaces[1], lowLoad.inTransition[1]);
-  connect(activateMediumLoad.outPlaces[1], mediumLoad.inTransition[1]);
-  connect(activateHighLoad.outPlaces[1], highLoad.inTransition[1]);
+  // Define powerDemandFactor based on active context states
+  powerDemandFactor = if energySavingMode.isActive then 0.3
+                      else if performanceMode.isActive then 1.0
+                      else if lowLoad.isActive then 0.6
+                      else if mediumLoad.isActive then 0.7
+                      else if highLoad.isActive then 0.85
+                      else 0.0;
 
 end ContextSwitch;

@@ -1,42 +1,34 @@
 within CFPNlib.Examples.CoffeeMaker;
 
-model FeatureSwitch "Coffee maker with mutually exclusive feature states"
-  import CFPNlib.Components.FeaturePN.FeaturePlace;
-  import CFPNlib.Components.FeaturePN.FeatureTransitionConditionEvent;
+model FeatureSwitch "Coffee maker with mutually exclusive feature states using FeatureWithConditionEvent"
+  import CFPNlib.Components.Composite.FeatureWithConditionEvent;
 
   // User Button Inputs (to be connected externally)
   input Boolean startBrewingButton;
   input Boolean startGrindingButton;
   input Boolean startSteamingButton;
 
-  // Feature Places representing coffee maker states
-  FeaturePlace brewing(featureName = "Brewing", startTokens = 0, nIn = 1) "Brewing state";
-  FeaturePlace grinding(featureName = "Grinding", startTokens = 0, nIn = 1) "Grinding state";
-  FeaturePlace steaming(featureName = "Steaming", startTokens = 0, nIn = 1) "Steaming state";
+  // Define Brewing Feature as the priority element
+  FeatureWithConditionEvent brewing(
+    featureName = "Brewing",
+    activationCondition = startBrewingButton
+  ) "Brewing feature";
 
-  // Feature Transitions with mutually exclusive firing conditions
-  FeatureTransitionConditionEvent startBrewing(
-    targetFeature = "Brewing", 
-    nOut = 1, 
-    firingCon = startBrewingButton and not pre(startGrinding.active) and not pre(startSteaming.active)) 
-    "Start brewing transition";
+  // Define Grinding Feature as a non-priority exclusive element
+  FeatureWithConditionEvent grinding(
+    featureName = "Grinding",
+    activationCondition = startGrindingButton and (not brewing.isActive)  // Grinding can only be activated if Brewing is not active
+  ) "Grinding feature";
 
-FeatureTransitionConditionEvent startGrinding(
-    targetFeature = "Grinding", 
-    nOut = 1, 
-    firingCon = startGrindingButton and not pre(startBrewing.active) and not pre(startSteaming.active)) 
-    "Start grinding transition";
+  // Define Steaming Feature as a non-priority, non-exclusive element
+  FeatureWithConditionEvent steaming(
+    featureName = "Steaming",
+    activationCondition = startSteamingButton and (not brewing.isActive)  // Steaming can only be activated if Brewing is not active
+  ) "Steaming feature";
 
-FeatureTransitionConditionEvent startSteaming(
-    targetFeature = "Steaming", 
-    nOut = 1, 
-    firingCon = startSteamingButton and not pre(startBrewing.active) and not pre(startGrinding.active)) 
-    "Start steaming transition";
-
-equation
-  // Connect transitions to their respective places
-  connect(startBrewing.outPlaces[1], brewing.inTransition[1]);
-  connect(startGrinding.outPlaces[1], grinding.inTransition[1]);
-  connect(startSteaming.outPlaces[1], steaming.inTransition[1]);
+  // Output flags for each feature
+  output Boolean brewingIsActive = brewing.isActive;
+  output Boolean grindingIsActive = grinding.isActive;
+  output Boolean steamingIsActive = steaming.isActive;
 
 end FeatureSwitch;

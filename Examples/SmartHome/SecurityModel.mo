@@ -1,17 +1,13 @@
 within CFPNlib.Examples.SmartHome;
-model SecurityModel
-  // Parameters for the Security system
-  parameter Boolean SecurityOn = true "Indicates if the security system is active";
-  parameter Boolean SecurityOff = false "Indicates if the security system is inactive";
 
-  // Security system state
+model SecurityModel "Security system with context-based activation controlled externally"
   Boolean securityActive "Current state of the security system";
 
-  // External input for context state
-  input Boolean isNight;
+  // Direct input for security activation
+  input Boolean securityActive_input "Security activation set externally";
 
 equation
-  // Activate security system only during night
-  securityActive = if isNight then SecurityOn else SecurityOff;
-
+  // Directly assign the input to the output security state
+  securityActive = securityActive_input;
+  
 end SecurityModel;

@@ -1,7 +1,8 @@
 within CFPNlib.Examples;
+
 package GreenIT "An example using ContextPlaceNested and ContextTransitionConditionEvent for hierarchical context management."
 
-annotation(
+  annotation(
     Documentation(info = "<html>
       <h1>Smart GreenIT Model</h1>
       <p>This model represents a smart energy management system with hierarchical context handling. It is designed to optimize power usage based on hydrogen availability and workload demands.</p>

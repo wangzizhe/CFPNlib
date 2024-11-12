@@ -15,7 +15,7 @@ equation
   // Trigger
   when time >= 10 then
     startBrewingButton = true;
-  elsewhen time >= 51 then
+  elsewhen time >= 41 then
     startBrewingButton = false;
   end when;
 

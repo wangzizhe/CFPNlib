@@ -1,7 +1,10 @@
 within CFPNlib.Examples.GreenIT;
 
-model GreenIT "GreenIT system with context switching and hydrogen-based power storage"
-  import CFPNlib.Examples.GreenIT.*;
+model GreenIT
+  import CFPNlib.Examples.GreenIT.HydrogenGenerator;
+  import CFPNlib.Examples.GreenIT.HydrogenTank;
+  import CFPNlib.Examples.GreenIT.ModularComputer;
+  import CFPNlib.Examples.GreenIT.ContextSwitch;
 
   // Instantiate components
   HydrogenGenerator hydrogenGenerator;
@@ -16,12 +19,7 @@ equation
   // Connect hydrogen level from tank to context switch
   contextSwitch.hydrogenLevel = hydrogenTank.hydrogenLevel;
 
-  // Set computer operational modes based on context states from ContextSwitch
-  modularComputer.isEnergySaving = contextSwitch.isEnergySaving;
-  modularComputer.isNormal = contextSwitch.isNormal;
-  modularComputer.isPerformance = contextSwitch.isPerformance;
-  modularComputer.isLowLoad = contextSwitch.isLowLoad;
-  modularComputer.isMediumLoad = contextSwitch.isMediumLoad;
-  modularComputer.isHighLoad = contextSwitch.isHighLoad;
+  // Connect power demand factor from context switch to modular computer
+  modularComputer.powerDemandFactor = contextSwitch.powerDemandFactor;
 
 end GreenIT;

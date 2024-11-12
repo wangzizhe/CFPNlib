@@ -1,7 +1,8 @@
 within CFPNlib.Examples;
+
 package SmartHome "An example using ContextPlace and ContextTransitionTimeEvent for context management."
 
-  annotation(
+annotation(
     Documentation(info = "<html>
       <h1>SmartHome Model</h1>
       <p>This model represents an automated smart home system that adapts lighting, heating, and security settings based on the time of day.</p>

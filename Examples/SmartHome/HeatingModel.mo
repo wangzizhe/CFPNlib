@@ -1,19 +1,13 @@
 within CFPNlib.Examples.SmartHome;
-model HeatingModel
-  // Parameters for the Heating system
-  parameter Real HeatPowerOn = 10 "Heating power in Watts when active";
-  parameter Real HeatPowerOff = 0 "Heating power when off";
 
-  // Heating power output
+model HeatingModel "Heating system with context-based power controlled externally"
   Real heatPower "Current power consumption of the heating system";
 
-  // External inputs for context states
-  input Boolean isDay;
-  input Boolean isEvening;
-  input Boolean isNight;
+  // Direct input for heating power
+  input Real heatPower_input "Heating power set externally";
 
 equation
-  // Control heating based on context
-  heatPower = if isEvening or isNight then HeatPowerOn else HeatPowerOff;
-
+  // Directly assign the input to the output heating power
+  heatPower = heatPower_input;
+  
 end HeatingModel;
