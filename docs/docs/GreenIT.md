@@ -27,16 +27,16 @@ This example models an energy-efficient system that manages power generation and
 
 Below is the complete control logic in the **Control Layer**, with the underlying Petri Nets fully hidden from the modeler’s view.
 
-<img src="C:/Users/wang/Documents/Modelica/CFPNlib/docs/assets/CFPN_GreenIT_example.png" style="zoom: 25%;" />
+<img src="../assets/CFPN_GreenIT_example.png" style="zoom: 25%;" />
 
-<img src="C:/Users/wang/Documents/Modelica/CFPNlib/docs/assets/GreenIT-SystemLayer.png" style="zoom: 25%;" />
+<img src="../assets/GreenIT-SystemLayer.png" style="zoom: 25%;" />
 
 ## Result
 
 Based on the available hydrogen level, the IT system adapts itself to different operational modes (energySavingMode, normalMode, and performanceMode). Within normalMode, the system further adapts to different load scenarios (LowLoad, MediumLoad, HighLoad).
 
-<img src="C:/Users/wang/Documents/Modelica/CFPNlib/docs/assets/GreenITResult-1.png"  />
+<img src="../assets/GreenITResult-1.png"  />
 
-<img src="C:/Users/wang/Documents/Modelica/CFPNlib/docs/assets/GreenITResult-2.png"  />
+<img src="../assets/GreenITResult-2.png"  />
 
 <img src="../assets/GreenITResult-3.png"  />
