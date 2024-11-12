@@ -1,7 +1,7 @@
 ---
 layout: default
 title: GreenIT
-parent: examples
+parent: Examples
 nav_order: 3
 ---
 

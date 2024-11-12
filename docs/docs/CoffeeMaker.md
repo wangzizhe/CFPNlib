@@ -1,7 +1,7 @@
 ---
 layout: default
 title: CoffeeMaker
-parent: examples
+parent: Examples
 nav_order: 2
 ---
 

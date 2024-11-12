@@ -1,4 +1,5 @@
 ---
+layout: default
 title: SmartHome
 parent: Examples
 nav_order: 1
