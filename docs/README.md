@@ -1,4 +1,6 @@
-# CFPNlib
-Enabling **Context-oriented Programming** and **variability management** in Modelica with **CFPNlib**: The Context Feature Petri Nets Library.
+<p align="center">
+	<h1 align="center">CFPNlib</h1>
+	<p align="center">A powerful, context-driven Modelica library for adaptive, modular systems.<br>CFPNlib simplifies variability management with intuitive tools for complex control logic.</p>
+	<p align="center"><strong><a href="https://wangzizhe.github.io/CFPNlib">https://wangzizhe.github.io/CFPNlib</a></strong></p>
+</p>
 
-For more information, please visit https://wangzizhe.github.io/CFPNlib.
