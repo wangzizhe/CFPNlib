@@ -1,4 +1,3 @@
 DiscretePlace
-TimeEventTransition
 ConditionEventTransition
-InhibitorArc
+TimeEventTransition

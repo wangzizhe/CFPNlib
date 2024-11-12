@@ -1,9 +1,0 @@
-within CFPNlib.Components.ContextPN;
-model ContextTransitionNested "Transition to handle nested context activation and deactivation"
-  // Discrete Transition with condition-based event
-  extends PNlib.Components.TT;
-
-  // Parameters
-  parameter String targetContext = "DefaultContext" "The name of the target context this transition manages";
-
-end ContextTransitionNested;

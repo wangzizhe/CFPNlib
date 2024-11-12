@@ -1,4 +1,5 @@
 within CFPNlib.Components.FeaturePN;
+
 model FeatureTransitionTimeEvent "Transition to handle feature state changes"
   // Discrete Transition with time-based event
   extends CFPNlib.Components.CFPNCore.TimeEventTransition;

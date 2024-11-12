@@ -1,4 +1,5 @@
 within CFPNlib.Components.ContextPN;
+
 model ContextTransitionTimeEvent "Transition to handle context activation and deactivation"
   // Discrete Transition with time-based event
   extends CFPNlib.Components.CFPNCore.TimeEventTransition;
