@@ -15,13 +15,13 @@ In complex, adaptive systems, it is essential for components to respond dynamica
 The benefits of COP include:
 
 1.  Separation of Concerns
-   * COP enables a clean separation between the core logic of each component and the contextual adaptations.
-2. Modularity and Reusability
-   * Each component can be reused in different contexts or applications without modification, making it highly adaptable to new requirements.
-3. Easier Mantenance and Scalability
-   * By isolating context-specific logic, COP makes it easier to maintain and extend the system. New contexts or conditions can be added with minimal changes to existing components.
-4. Improved Readability and Understandability
-   * COP improves the overall readability and structure of the codebase, as context-based variations are centralized and clearly defined.
+    * COP enables a clean separation between the core logic of each component and the contextual adaptations.
+2.  Modularity and Reusability
+    * Each component can be reused in different contexts or applications without modification, making it highly adaptable to new requirements.
+3.  Easier Mantenance and Scalability
+    * By isolating context-specific logic, COP makes it easier to maintain and extend the system. New contexts or conditions can be added with minimal changes to existing components.
+4.  Improved Readability and Understandability
+    * COP improves the overall readability and structure of the codebase, as context-based variations are centralized and clearly defined.
 
 Despite these advantages, COP is not natively supported in most modeling languages. **This is where CFPNlib comes in.**
 

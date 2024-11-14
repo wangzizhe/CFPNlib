@@ -21,4 +21,4 @@ In this example, the **light**, **heating**, and **security** modules in a smart
 
 Light, heating, and security—respond dynamically to the three modes (contexts): "day," "evening," and "night".
 
-<img src="../assets/SmartHomeResult.png"  />
+<img src="../../assets/SmartHomeResult.png"/>

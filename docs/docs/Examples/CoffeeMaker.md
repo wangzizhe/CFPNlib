@@ -22,6 +22,6 @@ This example simulates a coffee maker with three main functions—brewing, grind
 
 When the button for the corresponding function (feature) is pressed, the process starts. The system also handles conflicts, for example, if the brewing process is ongoing and the button for steaming is pressed, the system will wait until the brewing process finishes before starting the steaming process.
 
-<img src="C:/Users/wang/Documents/Modelica/CFPNlib/docs/assets/CoffeeMakerResult-1.png"  />
+<img src="../../assets/CoffeeMakerResult-1.png"/>
 
-<img src="../assets/CoffeeMakerResult-2.png"  />
+<img src="../../assets/CoffeeMakerResult-2.png"/>
