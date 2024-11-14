@@ -8,7 +8,7 @@ nav_order: 1
 
 A powerful, context-driven Modelica library for adaptive, modular systems. CFPNlib simplifies variability management with intuitive tools for complex control logic.
 
-## Introduction
+## I. Introduction
 
 In complex, adaptive systems, it is essential for components to respond dynamically to changes in context—whether those contexts are time-based (like day and night cycles) or resource-driven (like energy availability). However, most modeling languages, including Modelica, lack robust support for **Context-oriented Programming (COP)**, a paradigm that excels at modular, flexible, and adaptable system behavior. COP enables software and models to respond dynamically to various contexts without embedding complex logic within each individual component.
 
@@ -25,7 +25,7 @@ The benefits of COP include:
 
 Despite these advantages, COP is not natively supported in most modeling languages. **This is where CFPNlib comes in.**
 
-## Why CFPNlib?
+## II. Why CFPNlib?
 
 In Modelica, adapting a system to different operational contexts often involves embedding complex logic directly in each model. As the number of contexts grows, this approach can become difficult to maintain and expand. CFPNlib addresses this challenge by:
 
@@ -65,7 +65,7 @@ Key highlights of CFPNlib:
 3. **Nested Contexts and Features**: Allows **hierarchical management** with **nested contexts and features**, enabling fine-grained control over complex, multi-level systems.
 4. **Separation of Concerns**: Promotes **better modularization** and **readability** for complex models, making it easier to manage, expand, and understand large systems with distinct functional areas or operational modes.
 
-## How CFPNlib Integrates with Modelica
+## III. How CFPNlib Integrates with Modelica
 
 CFPNlib serves as a **Control Layer** that manages system variability, leveraging modular **Petri Nets** to represent different contexts and manage state transitions. This layer dynamically configures Modelica models in the **System Layer** in response to environmental states or operational requirements. The diagram below illustrates this layered architecture, with CFPNlib providing adaptive control over the System Layer’s behavior.
 
