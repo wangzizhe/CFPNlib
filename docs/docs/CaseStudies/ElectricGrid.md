@@ -12,7 +12,7 @@ The [TransiEnt]([GitHub - TransiEnt-official/transient-lib: official and current
 
 The model represent a simulation of an electrical grid system, incorporating renewable energy sources such as **solar panels** (bottom left), **wind plants** (bottom left), and a **Combined Heat and Power (CHP) plant** (left) into an **electric grid** (bottom right) that serves **user demands** (top right). The system is designed to balance power production from various sources with the dynamic energy demand from consumers. 
 
-<img src="../../../docs/assets/ElectricGridCaseStudy.png"/>
+<img src="../../assets/ElectricGridCaseStudy.png"/>
 
 This case study specifically showcases how to seamlessly integrate control logic into an existing energy system model. As an example, we demonstrate the implementation of a **renewable energy priority mode**. This mode prioritizes renewable energy sources by shutting down the CHP plant and relying solely on solar and wind power when certain conditions are met. These conditions ensure that the grid operates efficiently and sustainably, leveraging renewable resources when available.
 
@@ -67,12 +67,12 @@ This logic enables dynamic control of the CHP plant based on real-time condition
 
 Before integrating the control logic, the CHP plant operated continuously to meet the energy demand. This often led to unnecessary use of the CHP plant when renewable energy sources were available. Below is the diagram showing the original operation:
 
-<img src="../../../docs/assets/ElectricGrid_StandAlone_result.png"/>
+<img src="../../assets/ElectricGrid_StandAlone_result.png"/>
 
 ### Operation After Adding Control Logic
 Once the renewable energy priority mode is activated, the CHP plant is switched off when renewable energy production is sufficient to meet the demand. This is triggered by the conditions set in the control logic, such as low demand and high solar and wind energy production. Below is the diagram illustrating the operation with the new control logic in place:
 
-<img src="../../../docs/assets/ElectricGridCaseStudy_result.png"/>
+<img src="../../assets/ElectricGridCaseStudy_result.png"/>
 
 The results show that the CHP plant is only used when necessary, optimizing the grid's reliance on renewable energy and reducing the operational cost and environmental impact of fossil fuel-based energy generation.
 
