@@ -24,18 +24,20 @@ In ContextVariabilityManager, the base component (illustrated below) encapsulate
 Below is a straightforward example of defining mutually exclusive features, **"brewing"** and **"grinding"**, with "brewing" given priority. This setup ensures that if "brewing" is active, "grinding" cannot be activated, and if "grinding" is already active, it will be deactivated if "brewing" becomes active.
 
 ```modelica
-  FeatureWithConditionEvent grinding(
-    activationCondition = startGrindingButton and (not brewing.isActive)  
-  );
+FeatureWithConditionEvent grinding(
+  activationCondition = startGrindingButton and (not brewing.isActive)  
+);
 ```
 
 Below is an example of hierarchical contexts, "lowLoad" is defined as a child context of "normalMode", meaning that "lowLoad" can only activate if "normalMode" is already active. This parent-child relationship simplifies managing multiple layers of conditions.
 
 ```modelica
-  ContextWithConditionEvent lowLoad(
-    parentContext = "normalMode", 
-    activationCondition = (hydrogenLevel >= 20.0 and hydrogenLevel < 40.0) and 										normalMode.isActive
-  );
+ContextWithConditionEvent lowLoad(
+  parentContext = "normalMode", 
+  activationCondition = (hydrogenLevel >= 20.0 and 
+    hydrogenLevel < 40.0) and 
+    normalMode.isActive
+);
 ```
 
 ## Summary of Differences

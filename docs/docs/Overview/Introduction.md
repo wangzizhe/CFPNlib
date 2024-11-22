@@ -11,7 +11,7 @@ In adaptive systems, components often respond dynamically to changing contextsâ€
 
 COP allows for variability to be managed via context and its state, as shown in the following diagram from <u>Cardozo, Nicolas, et al. "Context petri nets: Definition and manipulation." (2012).</u>
 
-<img src="../../assets/COP.jpg" style="zoom: 80%;" />
+<img src="../../assets/COP.png" style="zoom: 80%;" />
 
 The benefits of COP include:
 

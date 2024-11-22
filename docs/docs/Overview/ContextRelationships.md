@@ -15,12 +15,12 @@ In this relationship, a child context can only be activated if its parent contex
 
 ```modelica
 ContextA (
-	activationCondition = ...
+  activationCondition = ...
 )
 
 ContextB (
-	parentContext = ContextA
-	activationCondition = ... and ContextA.isActive
+  parentContext = ContextA
+  activationCondition = ... and ContextA.isActive
 )
 ```
 

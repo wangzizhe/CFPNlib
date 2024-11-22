@@ -3,12 +3,11 @@ layout: default
 title: CarSharingSystem
 parent: Case Studies
 nav_order: 1
-
 ---
 
 # CarSharingSystem
 
-This case study demonstrates how **CFPNlib** can be used to implement modular and maintainable control logics within a car-sharing system. The model allows for dynamic control of car dispatch and pricing based on contextual factors, such as peak hours and user demand. The **CFPNlib** library is leveraged to introduce time-based and condition-based context events, improving flexibility without altering the core system model.
+This case study demonstrates how the **ContextVariabilityManager** can be used to implement modular and maintainable control logic within a car-sharing system. The model enables dynamic control of car dispatch and pricing based on contextual factors such as peak hours and user demand. The **ContextVariabilityManager** library is leveraged to introduce time-based and condition-based context events, enhancing flexibility without modifying the core system model.
 
 The structure of the case study is organized as follows:
 
@@ -25,14 +24,14 @@ CarSharingSystemCaseStudy
 - **PricingStrategyContextSwitch**: A control module to dynamically adjust pricing based on user demand.
 - **CarSharingSystemCaseStudy**: The integration model that connects the control modules with the base car-sharing system.
 
-As illustrated in the diagram below, this case study includes five modes: three condition-triggered modes and two time-triggered modes. Two of the condition-triggered modes are child modes of the time-triggered modes.
+As illustrated in the diagram below, this case study includes five contexts: three condition-based contexts and two time-based contexts. Two of the condition-based contexts are children contexts of the time-based contexts.
 
 <img src="../../assets/CarSharingSystem.png" style="zoom:25%;" />
 
 ## Modules
 ### Module 1: CarSharingSystem
 
-The **CarSharingSystem** model is based on an open-source car-sharing system repository, available [here](https://git-st.inf.tu-dresden.de/wang/pn4ecss). To integrate control logic, two input and output connectors are added for interfacing with the control layers, while other components remain unchanged.
+The **CarSharingSystem** model with 2824 variables and equations is based on an open-source car-sharing system repository, available [here](https://git-st.inf.tu-dresden.de/wang/pn4ecss). To integrate control logic, two input and output connectors are added for interfacing with the control layers, while other components remain unchanged.
 ```modelica
 // Added connectors
   output Real currentNumUsers(start = numUsers) "Current number of users in the system";
@@ -50,29 +49,26 @@ The **PeakHoursContextSwitch** module introduces both time-based and condition-b
 Here are the four context definitions:
 
 ```modelica
-ContextWithTimeEvent morningPeakMode(
-    startTokens = 0,
+ContextWithTimeEvent morningPeak(
     activationTimes = {morningPeakStartTime},
-    deactivationTimes = {morningPeakEndTime}
-  ) "Context for Morning Peak Mode";
+    deactivationTimes = {morningPeakEndTime})
+    "Context for Morning Peak";
 
-  ContextWithTimeEvent eveningPeakMode(
-    startTokens = 0,
+  ContextWithTimeEvent eveningPeak(
     activationTimes = {eveningPeakStartTime},
-    deactivationTimes = {eveningPeakEndTime}
-  ) "Context for Evening Peak Mode";
-  
-  ContextWithConditionEvent morningCarDispatchMode(
+    deactivationTimes = {eveningPeakEndTime})
+    "Context for Evening Peak";
+
+  ContextWithConditionEvent morningCarDispatch(
+    parentContext = "morningPeak",
+    activationCondition = (currentNumCars < 2) and morningPeak.isActive)
+    "Condition-based context to increase car availability during Morning Peak";
+
+  ContextWithConditionEvent eveningCarDispatch(
     startTokens = 0,
-    parentContext = "morningPeakMode",
-    activationCondition = (currentNumCars < 2)
-  ) "Condition-based context to increase car availability during Morning Peak Mode"; 
-  
-  ContextWithConditionEvent eveningCarDispatchMode(
-    startTokens = 0,
-    parentContext = "eveningPeakMode",
-    activationCondition = (currentNumCars < 1)
-  ) "Condition-based context to increase car availability Evening Peak Mode";
+    parentContext = "eveningPeak",
+    activationCondition = (currentNumCars < 1) and eveningPeak.isActive)
+    "Condition-based context to increase car availability during Evening Peak";
 ```
 
 In this setup, during peak hours, if `currentNumCars` falls below a certain level, cars are dispatched to meet demand. The remaining implementation is shown below:
@@ -90,12 +86,12 @@ model PeakHoursContextSwitch
   ...(shown above)  
   
   // Output variable to dynamically adjust based on active context
-  output Real carDispatch; 
+  output Real carDispatch;
 
 equation
-  // Adjust the car dispatch based on the active peak mode context
-  carDispatch = if morningCarDispatchMode.isActive then 2
-                  elseif eveningCarDispatchMode.isActive then 1
+  // Adjust the car dispatch based on the active peak context
+  carDispatch = if morningCarDispatch.isActive then 2
+                  elseif eveningCarDispatch.isActive then 1
                   else 0;
 
 end PeakHoursContextSwitch;
@@ -109,9 +105,7 @@ Example of the high-demand pricing context:
 
 ```modelica
 // Pricing Contexts
-  ContextWithConditionEvent highDemandPricingMode(
-    contextName = "HighDemandPricing",
-    startTokens = 0,
+  ContextWithConditionEvent highDemandPricing(
     activationCondition = currentNumUsers > highDemandThreshold
   ) "Context for High Demand Pricing";
 ```
@@ -141,11 +135,10 @@ model PricingStrategyContextSwitch
 
 equation
   // Adjust the price based on the active pricing context
-  currentPrice = if highDemandPricingMode.isActive then highDemandPrice 
+  currentPrice = if highDemandPricing.isActive then highDemandPrice 
                  else normalDemandPrice;
 
 end PricingStrategyContextSwitch;
-
 ```
 
 ### Module 4: CarSharingSystemCaseStudy
@@ -179,11 +172,4 @@ equation
   carSharingSystem.currentPrice = pricingStrategyContextSwitch.currentPrice;
 
 end CarSharingSystemCaseStudy;
-
 ```
-
-## Summary
-
-By using **CFPNlib**, developers can implement flexible, modular control logic without modifying the original model, ensuring a clear separation of concerns and simplifying maintenance. This approach also provides a comprehensive overview of how the model is controlled, benefiting both developers and users.
-
-The plotted results offer a clear visualization of which contexts are activated or deactivated, making it easy to compare different outputs and states. This streamlined analysis is especially valuable in large systems with thousands of variables—such as a car-sharing system with 2824 variables. The clarity of the results makes it much easier to interpret and optimize the system.
