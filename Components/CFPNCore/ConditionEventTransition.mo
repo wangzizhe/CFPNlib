@@ -1,5 +1,4 @@
-within CFPNlib.Components.CFPNCore;
-
+within ContextVariabilityManager.Components.CFPNCore;
 partial model ConditionEventTransition
   // Discrete Transition with condition-based event
   extends PNlib.Components.TT;

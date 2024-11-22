@@ -1,5 +1,4 @@
-within CFPNlib;
-
+within ContextVariabilityManager;
 package CaseStudies
 
 end CaseStudies;

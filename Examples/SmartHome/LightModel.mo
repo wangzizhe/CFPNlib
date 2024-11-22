@@ -1,5 +1,4 @@
-within CFPNlib.Examples.SmartHome;
-
+within ContextVariabilityManager.Examples.SmartHome;
 model LightModel "Light system with context-based intensity controlled externally"
   Real V "Voltage representing light intensity";
 
@@ -9,5 +8,5 @@ model LightModel "Light system with context-based intensity controlled externall
 equation
   // Directly assign the input to the output voltage
   V = V_input;
-  
+
 end LightModel;

@@ -1,9 +1,9 @@
-within ElectricGridCaseStudy;
+within ContextVariabilityManager.CaseStudies.ElectricGridCaseStudy;
 model ElectricGridCaseStudy
   // Base model: TransiEnt.Examples.Electric.ElectricGrid_StandAlone
 
   // Importing necessary component for context-based conditional event handling
-  import CFPNlib.Components.Composite.ContextWithConditionEvent;
+  import ContextVariabilityManager.Components.Composite.ContextWithConditionEvent;
 
   inner TransiEnt.SimCenter simCenter(useHomotopy=false, ambientConditions(
       redeclare TransiEnt.Basics.Tables.Ambient.GHI_Hamburg_3600s_2012_TMY globalSolarRadiation,
@@ -22,7 +22,7 @@ model ElectricGridCaseStudy
         extent={{20,-10},{-20,10}},
         rotation=270,
         origin={-197,-42})));
-  Modelica.Blocks.Sources.RealExpression electricityDemandCHP1(y=input_value) annotation (Placement(transformation(
+  Modelica.Blocks.Sources.RealExpression electricityDemandCHP1(y=CHP_input) annotation (Placement(transformation(
         extent={{20,-10},{-20,10}},
         rotation=270,
         origin={-226,-44})));
@@ -33,7 +33,7 @@ model ElectricGridCaseStudy
   TransiEnt.Producer.Electrical.Wind.PowerProfileWindPlant windProduction(P_el_n=2e6) annotation (Placement(transformation(extent={{-188,-254},{-148,-216}})));
   TransiEnt.Producer.Electrical.Photovoltaics.PVProfiles.SolarProfileLoader solarProfileLoader(change_of_sign=true, P_el_n=2e4) annotation (Placement(transformation(extent={{-278,-130},{-238,-90}})));
   TransiEnt.Producer.Electrical.Wind.WindProfiles.WindProfileLoader windProfileLoader(change_of_sign=true, P_el_n=2e6) annotation (Placement(transformation(extent={{-282,-212},{-244,-172}})));
-  TransiEnt.Producer.Electrical.Photovoltaics.PhotovoltaicProfilePlant pVPlant(P_el_n=2e4) annotation (Placement(transformation(extent={{-188,-178},{-148,-138}})));
+  TransiEnt.Producer.Electrical.Photovoltaics.PhotovoltaicProfilePlant pVPlant(P_el_n=2e4, P_el_is=PV_output)                annotation (Placement(transformation(extent={{-188,-178},{-148,-138}})));
   TransiEnt.Basics.Tables.GenericDataTable electricDemandTable(relativepath="electricity/ElectricityDemand_VDI4665_ExampleHousehold_RG1_HH_2012_900s.txt", constantfactor=1500) annotation (Placement(transformation(extent={{8,128},{48,168}})));
   TransiEnt.Components.Electrical.Grid.Line line_L1_1 annotation (Placement(transformation(extent={{-24,-134},{6,-102}})));
   TransiEnt.Components.Sensors.ElectricActivePower P_12(change_of_sign=true) annotation (Placement(transformation(extent={{56,-108},{76,-128}})));
@@ -61,13 +61,17 @@ model ElectricGridCaseStudy
   Real currentDemand;
   Real currentPVPower;
   Real currentWindPower;
-  Real input_value;
+  Real CHP_input;
+  Real PV_output;
 
-  // Context-based event for Renewable Priority Mode
-  ContextWithConditionEvent renewablePriorityMode(
-    contextName = "RenewablePriorityMode",
-    startTokens = 0,
-    activationCondition = (currentDemand < 1e6 and currentPVPower > 500 and currentWindPower > 5e5));
+  // Context-based event for Renewable Priority Operation
+  ContextWithConditionEvent renewablePriority(
+    weakInclusionContext = "windOnly",
+    activationCondition = (currentDemand < 1e6 and currentPVPower > 500 and currentWindPower > 5e5) or windOnly.isActive);
+
+  // Context-based event for Wind Only Operation
+  ContextWithConditionEvent windOnly(
+    activationCondition = (currentDemand < 5e5));
 
 equation
   connect(electricityDemandCHP1.y, CHP.P_set) annotation (Line(points={{-226,-22},{-226.69,-22},{-226.69,50.1667}},              color={0,0,127}));
@@ -115,12 +119,11 @@ equation
   currentPVPower = abs(pVPlant.epp.P);
   currentWindPower = abs(windProduction.epp.P);
 
-  // Conditional assignment based on the status of renewablePriorityMode
-  when renewablePriorityMode.isActive then
-    input_value = -min(electricDemandTable.y1 + 0.5e6, 1e6);
-  elsewhen not renewablePriorityMode.isActive then
-    input_value = 0;
-  end when;
+  // Conditional assignment based on the status of renewablePriority
+  CHP_input = if renewablePriority.isActive then 0 else -min(electricDemandTable.y1 + 0.5e6, 1e6);
+
+  // Conditional assignment based on the status of windOnly
+  PV_output = if windOnly.isActive then 0 else currentPVPower;
 
   annotation (
     Icon(graphics, coordinateSystem(preserveAspectRatio=false, initialScale=0.1)),

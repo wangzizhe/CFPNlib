@@ -1,5 +1,4 @@
-within CFPNlib.Examples.SmartHome;
-
+within ContextVariabilityManager.Examples.SmartHome;
 model HeatingModel "Heating system with context-based power controlled externally"
   Real heatPower "Current power consumption of the heating system";
 
@@ -9,5 +8,5 @@ model HeatingModel "Heating system with context-based power controlled externall
 equation
   // Directly assign the input to the output heating power
   heatPower = heatPower_input;
-  
+
 end HeatingModel;

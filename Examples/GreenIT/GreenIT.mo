@@ -1,10 +1,9 @@
-within CFPNlib.Examples.GreenIT;
-
+within ContextVariabilityManager.Examples.GreenIT;
 model GreenIT
-  import CFPNlib.Examples.GreenIT.HydrogenGenerator;
-  import CFPNlib.Examples.GreenIT.HydrogenTank;
-  import CFPNlib.Examples.GreenIT.ModularComputer;
-  import CFPNlib.Examples.GreenIT.ContextSwitch;
+  import ContextVariabilityManager.Examples.GreenIT.HydrogenGenerator;
+  import ContextVariabilityManager.Examples.GreenIT.HydrogenTank;
+  import ContextVariabilityManager.Examples.GreenIT.ModularComputer;
+  import ContextVariabilityManager.Examples.GreenIT.ContextSwitch;
 
   // Instantiate components
   HydrogenGenerator hydrogenGenerator;

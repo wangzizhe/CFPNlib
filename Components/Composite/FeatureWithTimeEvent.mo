@@ -1,12 +1,9 @@
-within CFPNlib.Components.Composite;
-
+within ContextVariabilityManager.Components.Composite;
 model FeatureWithTimeEvent
-  import CFPNlib.Components.FeaturePN.FeaturePlace;
-  import CFPNlib.Components.FeaturePN.FeatureTransitionTimeEvent;
+  import ContextVariabilityManager.Components.FeaturePN.FeaturePlace;
+  import ContextVariabilityManager.Components.FeaturePN.FeatureTransitionTimeEvent;
 
   //****MODIFIABLE PARAMETERS AND VARIABLES BEGIN****//
-  parameter String featureName = "DefaultFeature" "Name of the feature";
-  parameter String parentFeature = "" "Optional name of the parent feature";
   parameter Integer startTokens = 0 "Initial token count for feature state";
   parameter Real[:] activationTimes "Array of times to activate this feature";
   parameter Real[:] deactivationTimes "Array of times to deactivate this feature";
@@ -14,25 +11,21 @@ model FeatureWithTimeEvent
 
   // Feature state and transitions
   FeaturePlace featureState(
-    featureName = featureName,
-    parentFeature = parentFeature,
     startTokens = startTokens,
     nIn = 1,
-    nOut = 1
-  ) "Represents if feature is active";
+    nOut = 1)
+    "Feature place indicating active state";
 
   // Activation and deactivation transitions with exclusive conditions
   FeatureTransitionTimeEvent activateTransition(
-    targetFeature = featureName,
     nOut = 1,
-    event = activationTimes
-  ) "Transition to activate feature at specified times, if no exclusions are active";
+    event = activationTimes)
+    "Transition to activate feature at specified times";
 
   FeatureTransitionTimeEvent deactivateTransition(
-    targetFeature = featureName,
     nIn = 1,
-    event = deactivationTimes
-  ) "Transition to deactivate feature at specified times";
+    event = deactivationTimes)
+    "Transition to deactivate feature at specified times";
 
   // Output to indicate if the feature is currently active
   output Boolean isActive = featureState.t > 0;
@@ -42,4 +35,30 @@ equation
   connect(activateTransition.outPlaces[1], featureState.inTransition[1]);
   connect(featureState.outTransition[1], deactivateTransition.inPlaces[1]);
 
+  annotation (Icon(graphics={
+        Ellipse(extent={{-60,60},{60,-60}}, lineColor={0,0,0}),
+        Rectangle(
+          extent={{-100,60},{-80,-60}},
+          lineColor={0,0,0},
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Rectangle(
+          extent={{80,60},{100,-60}},
+          lineColor={0,0,0},
+          fillColor={0,0,0},
+          fillPattern=FillPattern.Solid),
+        Line(
+          points={{-80,0},{-60,0}},
+          color={0,0,0},
+          thickness=0.5,
+          arrow={Arrow.None,Arrow.Filled}),
+        Line(
+          points={{60,0},{80,0}},
+          color={0,0,0},
+          thickness=0.5,
+          arrow={Arrow.None,Arrow.Filled}),
+        Text(
+          extent={{-48,112},{52,50}},
+          textColor={0,0,0},
+          textString="TimeFeature"),                                                                                                                                         Text(extent={{0.5,23.5},{0.5,-23.5}},        lineColor = {0, 0, 0}, textString = DynamicSelect("%startTokens", if animateMarking then String(t) else " "))}));
 end FeatureWithTimeEvent;

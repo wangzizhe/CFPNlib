@@ -1,5 +1,4 @@
-within CFPNlib.Examples;
-
+within ContextVariabilityManager.Examples;
 package CoffeeMaker "An example using FeaturePlace and FeatureTransitionConditionEvent for feature management."
 
 annotation (
@@ -15,7 +14,5 @@ annotation (
       </ul>
       <h2>Triggering Logic:</h2>
       <p>The transitions are controlled using specific time events to simulate user interactions, ensuring the coffee maker can perform different functions sequentially or simultaneously as needed.</p>
-    </html>")
-);
-
+    </html>"));
 end CoffeeMaker;

@@ -1,5 +1,4 @@
-within CFPNlib.Components;
-
+within ContextVariabilityManager.Components;
 package FeaturePN
 
 end FeaturePN;

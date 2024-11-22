@@ -1,47 +1,40 @@
-within CFPNlib.Examples.GreenIT;
-
+within ContextVariabilityManager.Examples.GreenIT;
 model ContextSwitch "Context management for GreenIT system with nested load levels"
-  import CFPNlib.Components.Composite.ContextWithConditionEvent;
+  import ContextVariabilityManager.Components.Composite.ContextWithConditionEvent;
 
   // Input the hydrogen level from HydrogenTank
   input Real hydrogenLevel "Current hydrogen level from HydrogenTank";
   // Output the power demand factor for ModularComputer
   output Real powerDemandFactor;
 
-  // Define Contexts for Energy Modes
+  // Define Contexts for operation modes
   ContextWithConditionEvent energySavingMode(
-    contextName = "EnergySavingMode", 
-    activationCondition = (hydrogenLevel < 20.0)
-  ) "Energy-saving mode for low hydrogen levels";
+    activationCondition = (hydrogenLevel < 20.0))
+    "Energy-saving mode for low hydrogen levels";
 
   ContextWithConditionEvent normalMode(
-    contextName = "NormalMode", 
-    activationCondition = (hydrogenLevel >= 20.0 and hydrogenLevel < 80.0)
-  ) "Normal operation mode for moderate hydrogen levels";
+    activationCondition = (hydrogenLevel >= 20.0 and hydrogenLevel < 80.0))
+    "Normal operation mode for moderate hydrogen levels";
 
   ContextWithConditionEvent performanceMode(
-    contextName = "PerformanceMode", 
-    activationCondition = (hydrogenLevel >= 80.0)
-  ) "High-performance mode for high hydrogen levels";
+    activationCondition = (hydrogenLevel >= 80.0))
+    "High-performance mode for high hydrogen levels";
 
   // Nested Load Levels within Normal Mode
   ContextWithConditionEvent lowLoad(
-    contextName = "LowLoad", 
-    parentContext = "NormalMode", 
-    activationCondition = (hydrogenLevel >= 20.0 and hydrogenLevel < 40.0)
-  ) "Low load mode within NormalMode";
+    parentContext = "normalMode",
+    activationCondition = (hydrogenLevel >= 20.0 and hydrogenLevel < 40.0) and normalMode.isActive)
+    "Low load mode within normalMode";
 
   ContextWithConditionEvent mediumLoad(
-    contextName = "MediumLoad", 
-    parentContext = "NormalMode", 
-    activationCondition = (hydrogenLevel >= 40.0 and hydrogenLevel < 60.0)
-  ) "Medium load mode within NormalMode";
+    parentContext = "normalMode",
+    activationCondition = (hydrogenLevel >= 40.0 and hydrogenLevel < 60.0) and normalMode.isActive)
+    "Medium load mode within normalMode";
 
   ContextWithConditionEvent highLoad(
-    contextName = "HighLoad", 
-    parentContext = "NormalMode", 
-    activationCondition = (hydrogenLevel >= 60.0 and hydrogenLevel < 80.0)
-  ) "High load mode within NormalMode";
+    parentContext = "normalMode",
+    activationCondition = (hydrogenLevel >= 60.0 and hydrogenLevel < 80.0) and normalMode.isActive)
+    "High load mode within normalMode";
 
 equation
   // Define powerDemandFactor based on active context states
@@ -52,4 +45,5 @@ equation
                       else if highLoad.isActive then 0.85
                       else 0.0;
 
+  annotation (experiment(StopTime=86400, __Dymola_Algorithm="Dassl"));
 end ContextSwitch;

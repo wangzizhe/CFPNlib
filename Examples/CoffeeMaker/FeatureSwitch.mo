@@ -1,7 +1,6 @@
-within CFPNlib.Examples.CoffeeMaker;
-
+within ContextVariabilityManager.Examples.CoffeeMaker;
 model FeatureSwitch "Coffee maker with mutually exclusive feature states using FeatureWithConditionEvent"
-  import CFPNlib.Components.Composite.FeatureWithConditionEvent;
+  import ContextVariabilityManager.Components.Composite.FeatureWithConditionEvent;
 
   // User Button Inputs (to be connected externally)
   input Boolean startBrewingButton;
@@ -10,25 +9,17 @@ model FeatureSwitch "Coffee maker with mutually exclusive feature states using F
 
   // Define Brewing Feature as the priority element
   FeatureWithConditionEvent brewing(
-    featureName = "Brewing",
-    activationCondition = startBrewingButton
-  ) "Brewing feature";
+    activationCondition = startBrewingButton)
+    "Brewing feature";
 
-  // Define Grinding Feature as a non-priority exclusive element
+  // Define Grinding Feature as a non-priority exclusive element (Grinding can only be activated if Brewing is not active)
   FeatureWithConditionEvent grinding(
-    featureName = "Grinding",
-    activationCondition = startGrindingButton and (not brewing.isActive)  // Grinding can only be activated if Brewing is not active
-  ) "Grinding feature";
+    activationCondition = startGrindingButton and (not brewing.isActive))
+    "Grinding feature";
 
-  // Define Steaming Feature as a non-priority, non-exclusive element
+  // Define Steaming Feature as a non-priority, non-exclusive element (Steaming can only be activated if Brewing is not active)
   FeatureWithConditionEvent steaming(
-    featureName = "Steaming",
-    activationCondition = startSteamingButton and (not brewing.isActive)  // Steaming can only be activated if Brewing is not active
-  ) "Steaming feature";
-
-  // Output flags for each feature
-  output Boolean brewingIsActive = brewing.isActive;
-  output Boolean grindingIsActive = grinding.isActive;
-  output Boolean steamingIsActive = steaming.isActive;
+    activationCondition = startSteamingButton and (not brewing.isActive))
+    "Steaming feature";
 
 end FeatureSwitch;

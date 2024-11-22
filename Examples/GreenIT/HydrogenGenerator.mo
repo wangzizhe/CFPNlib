@@ -1,5 +1,4 @@
-within CFPNlib.Examples.GreenIT;
-
+within ContextVariabilityManager.Examples.GreenIT;
 model HydrogenGenerator "Generates hydrogen based on hourly input over 24 hours"
   // Define a CombiTable1Ds to use inline data for hydrogen production
   Modelica.Blocks.Tables.CombiTable1Ds hydrogenTable(
@@ -27,12 +26,11 @@ model HydrogenGenerator "Generates hydrogen based on hourly input over 24 hours"
      72000, 50.0;
      75600, 30.0;
      79200, 10.0;
-     82800, 5.0
-    ],
-    columns = {1,2},  // Specifies that column 2 has hydrogen production values
+     82800, 5.0],
+    columns = {1,2},
     smoothness = Modelica.Blocks.Types.Smoothness.ConstantSegments,
-    extrapolation = Modelica.Blocks.Types.Extrapolation.HoldLastPoint
-  );
+    extrapolation = Modelica.Blocks.Types.Extrapolation.HoldLastPoint);
+                      // Specifies that column 2 has hydrogen production values
 
   output Real hydrogenProduction "Current hydrogen output rate based on table data";
 

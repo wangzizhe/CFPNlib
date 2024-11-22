@@ -1,10 +1,9 @@
-within CFPNlib.Examples.SmartHome;
-
+within ContextVariabilityManager.Examples.SmartHome;
 model SmartHome
-  import CFPNlib.Examples.SmartHome.LightModel;
-  import CFPNlib.Examples.SmartHome.HeatingModel;
-  import CFPNlib.Examples.SmartHome.SecurityModel;
-  import CFPNlib.Examples.SmartHome.ContextSwitch;
+  import ContextVariabilityManager.Examples.SmartHome.LightModel;
+  import ContextVariabilityManager.Examples.SmartHome.HeatingModel;
+  import ContextVariabilityManager.Examples.SmartHome.SecurityModel;
+  import ContextVariabilityManager.Examples.SmartHome.ContextSwitch;
 
   // Instantiate feature models and context switch
   LightModel lightModel;

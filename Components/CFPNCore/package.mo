@@ -1,5 +1,4 @@
-within CFPNlib.Components;
-
+within ContextVariabilityManager.Components;
 package CFPNCore
 
 end CFPNCore;

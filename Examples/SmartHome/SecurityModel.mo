@@ -1,5 +1,4 @@
-within CFPNlib.Examples.SmartHome;
-
+within ContextVariabilityManager.Examples.SmartHome;
 model SecurityModel "Security system with context-based activation controlled externally"
   Boolean securityActive "Current state of the security system";
 
@@ -9,5 +8,5 @@ model SecurityModel "Security system with context-based activation controlled ex
 equation
   // Directly assign the input to the output security state
   securityActive = securityActive_input;
-  
+
 end SecurityModel;

@@ -1,7 +1,6 @@
-within CFPNlib.Examples.SmartHome;
-
+within ContextVariabilityManager.Examples.SmartHome;
 model ContextSwitch "SmartHome context switch with encapsulated contexts"
-  import CFPNlib.Components.Composite.ContextWithTimeEvent;
+  import ContextVariabilityManager.Components.Composite.ContextWithTimeEvent;
 
   // User-defined parameters
   parameter Integer numCycles = 100 "Maximum number of day-night cycles to simulate";
@@ -17,22 +16,20 @@ model ContextSwitch "SmartHome context switch with encapsulated contexts"
 
   // Encapsulated Contexts for each mode
   ContextWithTimeEvent dayMode(
-    startTokens = 0,
     activationTimes = activateDayTimes,
-    deactivationTimes = activateEveningTimes
-  ) "Context for Day Mode";
+    deactivationTimes = activateEveningTimes)
+    "Context for Day Mode";
 
   ContextWithTimeEvent eveningMode(
-    startTokens = 0,
     activationTimes = activateEveningTimes,
-    deactivationTimes = activateNightTimes
-  ) "Context for Evening Mode";
+    deactivationTimes = activateNightTimes)
+    "Context for Evening Mode";
 
   ContextWithTimeEvent nightMode(
     startTokens = 1,
     activationTimes = activateNightTimes,
-    deactivationTimes = activateDayTimes
-  ) "Context for Night Mode";
+    deactivationTimes = activateDayTimes)
+    "Context for Night Mode";
 
   //Outputs to set each feature model's state based on the context
   output Real V_input;

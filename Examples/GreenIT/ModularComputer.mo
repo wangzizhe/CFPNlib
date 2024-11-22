@@ -1,5 +1,4 @@
-within CFPNlib.Examples.GreenIT;
-
+within ContextVariabilityManager.Examples.GreenIT;
 model ModularComputer "Modular computer system that adjusts power consumption based on context"
   parameter Real maxPowerConsumption = 500 "Maximum power consumption in watts";
   input Real powerDemandFactor "Power demand factor calculated in ContextSwitch";

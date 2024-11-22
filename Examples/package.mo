@@ -1,5 +1,4 @@
-within CFPNlib;
-
+within ContextVariabilityManager;
 package Examples
 
 end Examples;

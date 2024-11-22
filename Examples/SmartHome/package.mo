@@ -1,8 +1,7 @@
-within CFPNlib.Examples;
-
+within ContextVariabilityManager.Examples;
 package SmartHome "An example using ContextPlace and ContextTransitionTimeEvent for context management."
 
-annotation(
+annotation (
     Documentation(info = "<html>
       <h1>SmartHome Model</h1>
       <p>This model represents an automated smart home system that adapts lighting, heating, and security settings based on the time of day.</p>
@@ -21,7 +20,5 @@ annotation(
       </ul>
       <h2>Triggering Logic:</h2>
       <p>The transitions are governed by the time of day (day, evening, night), which activates or deactivates specific features to create an adaptive and responsive home environment.</p>
-    </html>")
-  );
-
+    </html>"));
 end SmartHome;

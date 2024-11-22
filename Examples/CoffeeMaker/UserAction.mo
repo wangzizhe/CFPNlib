@@ -1,5 +1,4 @@
-within CFPNlib.Examples.CoffeeMaker;
-
+within ContextVariabilityManager.Examples.CoffeeMaker;
 model UserAction "Simulates user pushing start buttons for one-time pulses using simple when statements"
   // Output Boolean signals for each button
   output Boolean startBrewingButton;

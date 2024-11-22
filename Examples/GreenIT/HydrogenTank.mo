@@ -1,5 +1,4 @@
-within CFPNlib.Examples.GreenIT;
-
+within ContextVariabilityManager.Examples.GreenIT;
 model HydrogenTank "Tank to store and supply hydrogen directly from production input"
   // State Variables
   output Real hydrogenLevel "Current hydrogen level in the tank, directly set by hydrogen production";
