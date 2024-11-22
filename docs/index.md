@@ -4,13 +4,17 @@ title: Overview
 nav_order: 1
 ---
 
-# CFPNlib
+# ContextVariabilityManager
 
 A powerful Modelica tool that facilitates **variability management** using **modular and context-driven control logic**, enabling scalable and adaptable system designs.
 
 ## I. Introduction
 
 In adaptive systems, components often respond dynamically to changing contexts—whether these contexts are time-based (e.g., day and night cycles) or resource-driven (e.g., fluctuating energy availability). However, most modeling languages, including Modelica, lack support for **Context-oriented Programming (COP)**, a paradigm for modular, flexible, and adaptable system behavior. COP allows models to adapt to contexts dynamically. It simplifies context definition (e.g., `when DayMode.isActive then ...`), reducing the need for cumbersome `if/else` statements and complex `when` clauses, enabling efficient variability management.
+
+COP allows for variability to be managed via context and its state, as shown in the following diagram from <u>Cardozo, Nicolas, et al. "Context petri nets: Definition and manipulation." (2012).</u>
+
+<img src="./assets/COP.jpg" style="zoom: 80%;" />
 
 The benefits of COP include:
 
@@ -23,65 +27,178 @@ The benefits of COP include:
 4.  Improved Readability and Understandability
     * Centralized context definitions make the code clearer and easier to understand.
 
-However, most modeling languages don’t support COP natively. **CFPNlib fills this gap by bringing COP principles to Modelica**, enabling developers to build flexible, context-aware models with ease.
+However, most modeling languages don’t support COP natively. **ContextVariabilityManager bridges this gap by bringing COP principles to Modelica**, enabling developers to build flexible, context-aware models with ease.
 
-## II. Why CFPNlib? Why Not If/Else or When?
+## II. Why This?
+
+> Why not `if/else` or `when`?
 
 Well, in small models, embedding control logic with `if/else` and `when` statements might be straightforward. However, as the number of contexts grows, this approach becomes harder to maintain and expand. Especially, defining parent-child or mutually exclusive contexts can quickly lead to a tangled mess of redundant code. While you might still be able to make sense of it after some time, others will likely struggle to understand and work with the model.
 
-**So, what if there was a simpler, cleaner, and more intuitive way to define contexts in natural language, while also supporting parent-child and mutually exclusive contexts that are easy to maintain and extend?**
+So, what if there was a simpler, cleaner, and more intuitive way to define contexts in natural language, while also supporting parent-child and mutually exclusive contexts that are easy to maintain and extend?
 
-**CFPNlib** provides a solution to this problem by:
+**ContextVariabilityManager** provides a solution to this problem by:
 
 - allowing modelers to define context-specific configurations separately from the core model, enabling dynamic control of system behavior (such as energy-saving or performance modes) without altering the underlying Modelica components. This keeps the model clean, modular, and easy to maintain.
 
-In CFPNlib, the base component (illustrated below) encapsulates each context or feature as a "place" with activation and deactivation transitions. **CFPNlib abstracts the complexity of Petri Nets**, allowing modelers to **intuitively define contexts, activation conditions, parent-child relationships, and mutual exclusivity in an intuitive way**—no expertise in Petri Nets required. This results in a much simpler, more manageable design.
+In ContextVariabilityManager, the base component (illustrated below) encapsulates each context or feature as a "place" with activation and deactivation transitions. **It abstracts the complexity of Petri Nets**, allowing modelers to **easily define contexts, activation conditions, parent-child relationships, and weak/strong inclusivity or mutual exclusivity**—no expertise in Petri Nets required. This leads to a simpler and more manageable design.
 
-<img src="./assets/CFPN_component.png" style="zoom: 25%;" />
+<img src="./assets/CFPN_component.png" style="zoom: 33%;" />
 
 Below is a straightforward example of defining mutually exclusive features, **"brewing"** and **"grinding"**, with "brewing" given priority. This setup ensures that if "brewing" is active, "grinding" cannot be activated, and if "grinding" is already active, it will be deactivated if "brewing" becomes active.
 
 ```modelica
-  // Define Grinding Feature as a non-priority exclusive element
   FeatureWithConditionEvent grinding(
-    featureName = "Grinding",
-    activationCondition = startGrindingButton and (not brewing.isActive)  // Grinding can only be activated if Brewing is not active
-  ) "Grinding feature";
+    activationCondition = startGrindingButton and (not brewing.isActive)  
+  );
 ```
 
-Below is an example of hierarchical contexts, "LowLoad" is defined as a child context of "NormalMode", meaning that "LowLoad" can only activate if "NormalMode" is already active. This parent-child relationship simplifies managing multiple layers of conditions.
+Below is an example of hierarchical contexts, "lowLoad" is defined as a child context of "normalMode", meaning that "lowLoad" can only activate if "normalMode" is already active. This parent-child relationship simplifies managing multiple layers of conditions.
 
 ```modelica
-  // Nested Load Levels within Normal Mode
   ContextWithConditionEvent lowLoad(
-    contextName = "LowLoad", 
-    parentContext = "NormalMode", 
-    activationCondition = (hydrogenLevel >= 20.0 and hydrogenLevel < 40.0)
-  ) "Low load mode within NormalMode";
+    parentContext = "normalMode", 
+    activationCondition = (hydrogenLevel >= 20.0 and hydrogenLevel < 40.0) and 										normalMode.isActive
+  );
+```
+### Summary of Differences
+| Aspect                | **ContextVariabilityManager (Using Petri Nets)**             | **Direct Definition (Using `if/else` & `when`) in Modelica** |
+| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **Modularity**        | High - Modular and encapsulated Petri Nets, better separation of concerns. | Low - Manual handling of conditions, more complex and less modular code. |
+| **Maintenance**       | High - Clear separation of contexts and conditions, easy to read and maintain. | Low - `if/else` chains clutter the code, hard to read and maintain. |
+| **Visualization**     | Can visualize Petri nets to understand state transitions.    | No built-in visualization for context transitions.           |
+| **Context Relations** | Handles context relations (parent-child, inclusion, exclusion) elegantly. | Harder to manage, leading to redundant code.                 |
+| **Error Handling**    | Clear structure and isolated transitions make error handling more intuitive. | Errors may be harder to trace due to complex chains and nested conditions. |
+
+## III. Context Relationships
+
+In complex systems, components often depend on each other. To model these dependencies, various relationships—such as **parent-child**, **weak inclusion**, **strong inclusion**, and **mutual exclusion**—allow flexible control over context activation and deactivation. These relationships help represent dynamic interactions and control structures within a system.
+
+### 1. Parent-Child Relationship
+
+In this relationship, a child context can only be activated if its parent context is active, establishing a dependency where the child's state is governed by the parent's.
+
+```modelica
+ContextA (
+	activationCondition = ...
+)
+
+ContextB (
+	parentContext = ContextA
+	activationCondition = ... and ContextA.isActive
+)
 ```
 
-Key highlights of CFPNlib:
+In this example, **ContextB** is only active when **ContextA** is active. This parent-child relationship enforces **ContextB's** activation based on **ContextA's** state.
 
-1. **Variability Management**: 
-   * Manages system variability through **Contexts** (conditions) and **Features** (functionality), enabling different behaviors based on triggers.
-2. **Exclusivity and Priority**: 
-   * Supports **mutual exclusivity** and **priority** handling, ensuring high-priority contexts activate first, ideal for conflict resolution.
-3. **Nested Contexts and Features**: 
-   * Enables **hierarchical control** with nested contexts and features, offering fine-grained management for complex systems.
-4. **Separation of Concerns**: 
-   * Improves **modularity** and **readability**, simplifying the management and expansion of complex models with distinct functional areas.
+### 2. Weak Inclusion
 
-## III. How CFPNlib Integrates with Modelica
+This relationship allows a context to be activated or deactivated independently, but its state can be influenced by the activation state of another context.
 
-CFPNlib serves as a **Control Layer** that manages system variability, leveraging modular **Petri Nets** to represent different contexts and manage state transitions. This layer dynamically configures Modelica models in the **System Layer** in response to environmental states or operational requirements. The diagram below illustrates this layered architecture, with CFPNlib providing adaptive control over the System Layer’s behavior.
+```modelica
+ContextA (
+  activationCondition = ...
+)
 
-<img src="./assets/CFPN_application.png" style="zoom: 25%;" />
+ContextB (
+  weakInclusionContext = ContextA
+  activationCondition = ... or ContextA.isActive
+)
+```
 
-## IV. For Petri Nets Experts
+In this example, the activation/deactivation of **ContextA** influences the state of **ContextB**, but **ContextB** retains the freedom to activate or deactivate independently of **ContextA**.
 
-If you're familiar with Petri Nets, I've got some interesting insights for you.
+### 3. Strong Inclusion
 
-### 1. How Does the Internal Logic Work?
+Here, two contexts are tightly coupled, meaning the activation or deactivation of one directly triggers the state change of the other, creating a mutual dependency.
+
+```modelica
+ContextA (
+  strongInclusionContext = ContextB
+  activationCondition = ... or ContextB.isActive
+)
+
+ContextB (
+  strongInclusionContext = ContextA
+  activationCondition = ... or ContextA.isActive
+)
+```
+
+In this example the activation or deactivation of **ContextA** or **ContextB** will directly trigger the activation or deactivation of the other.
+
+### 4. Mutual Exclusion (and Priority)
+
+This relationship ensures that two contexts cannot be active simultaneously, where activating one context deactivates the other, and priority can be assigned to manage which context takes precedence.
+
+```modelica
+ContextA (
+  activationCondition = ...
+)
+
+ContextB (
+  exclusionContext = ContextA
+  activationCondition = ... and not ContextA.isActive
+)
+```
+
+In this example, **ContextB** can only be activated if **ContextA** is not active. If **ContextA** is activated, **ContextB** will automatically deactivate.
+
+## IV. Integration with Modelica
+
+ContextVariabilityManager serves as a **Control Layer** that manages system variability, leveraging modular **Petri Nets** to represent different contexts and manage state transitions. This layer dynamically configures Modelica models in the **System Layer** in response to environmental states or operational requirements. The diagram below illustrates this layered architecture, with ContextVariabilityManager providing adaptive control over the System Layer’s behavior.
+
+<img src="./assets/CFPN_application.png" style="zoom:80%;" />
+
+ContextVariabilityManager is a Modelica library built with a structured design that extends `PNlib` and can be imported into any Modelica environment. Developers can utilize the components in the `Composite` package to create custom control logic.
+
+```
+ContextVariabilityManager
+│
+├── Components
+│   ├── CFPNCore
+│   │   ├── DiscretePlace
+│   │   ├── ConditionEventTransition
+│   │   └── TimeEventTransition
+│   │
+│   ├── ContextPN
+│   │   ├── ContextPlace
+│   │   ├── ContextTransitionTimeEvent
+│   │   └── ContextTransitionConditionEvent
+│   │
+│   ├── FeaturePN
+│   │   ├── FeaturePlace
+│   │   ├── FeatureTransitionTimeEvent
+│   │   └── FeatureTransitionConditionEvent
+│   │
+│   └── Composite
+│       ├── ContextWithTimeEvent
+│       ├── ContextWithConditionEvent
+│       ├── FeatureWithTimeEvent
+│       └── FeatureWithConditionEvent
+│
+├── Examples
+│   ├── SmartHome
+│   ├── CoffeeMaker
+│   └── GreenIT
+│
+└── CaseStudies
+    ├── CarSharingSystemCaseStudy
+    └── ElectricGridCaseStudy
+```
+
+## V. FAQ
+
+If you're interested, I have some valuable insights to share with you.
+
+### 1. What Is The Difference Between Context and Feature?
+
+In systems modeling, **contexts** define the broader state or environment in which a system operates, governing its behavior at any given moment. They are dynamic and can change in response to specific conditions, influencing the activation of other components. **Features**, on the other hand, are specific properties or functions of a system that vary within a context, like specific tasks or capabilities.
+
+In Modelica, **contexts** are more commonly used to represent dynamic system states, while **features** can be applied for discrete functions, like a `brewing` or grinding operation in a `CoffeeMachine`, where physical equations aren't necessary.
+
+In summary, **contexts** shape the system’s environment and behavior, while **features** define its capabilities within that environment.
+
+### 2. How Does the Internal Logic Work?
 
 In the base component, each context or feature is represented by a *place* with *activation* and *deactivation transitions*. The token count of the place is either 0 or 1—0 means the context is inactive, and 1 means it's active.
 
@@ -89,36 +206,7 @@ Here’s where it gets tricky. In Modelica, for a time-based context like `when 
 
 To solve this, I modified the Petri Net logic in the base component so the token count always stays 0 or 1. Whether it’s a time-based or condition-based trigger, the context is active when the token count is 1 and inactive when it’s 0. Simple and consistent!
 
-### 2. How Do Parent-Child Contexts Work?
-
-This is pretty straightforward. A child context checks if its parent context is active before activating. If the parent deactivates, the child deactivates automatically. This logic is built into the base component.
-
-For example, take the *LowLoad* mode. It only activates when *NormalMode* is active, and `hydrogenLevel` is between 20 and 40.
-
-```modelica
-  // Nested Load Levels within Normal Mode
-  ContextWithConditionEvent lowLoad(
-    contextName = "LowLoad", 
-    parentContext = "NormalMode", 
-    activationCondition = (hydrogenLevel >= 20.0 and hydrogenLevel < 40.0)
-  ) "Low load mode within NormalMode";
-```
-
-### 3. How Does Mutual Exclusivity Work?
-
-This is also simple. You can define as many mutually exclusive contexts as you want, and you have full control over which ones get priority.
-
-For instance, let’s say the `Brewing` feature has priority over `Grinding`. When `Brewing` is active, it prevents `Grinding` from activating. If `Grinding` is already active and you start `Brewing`, it deactivates `Grinding` automatically.
-
-```modelica
-  // Define Grinding Feature as a non-priority exclusive element
-  FeatureWithConditionEvent grinding(
-    featureName = "Grinding",
-    activationCondition = startGrindingButton and (not brewing.isActive)  // Grinding can only be activated if Brewing is not active
-  ) "Grinding feature";
-```
-
-### 4. Why Not Use Inhibitor Arcs?
+### 3. Why Not Use Inhibitor Arcs?
 
 Great question! I did consider inhibitor arcs but ran into two major issues.
 
@@ -126,7 +214,7 @@ Great question! I did consider inhibitor arcs but ran into two major issues.
 
 <img src="./assets/CFPN_with_IA.png" style="zoom: 33%;" />
 
-2. **Loss of Encapsulation**: If modelers had to manually connect these inhibitor arcs, the Petri Net mechanics wouldn’t stay hidden. That defeats the purpose of CFPNlib. My goal is to provide a modular, easy-to-use tool where modelers don’t need to understand the underlying Petri Net logic.
+2. **Loss of Encapsulation**: If modelers had to manually connect these inhibitor arcs, the Petri Net mechanics wouldn’t stay hidden. That defeats the purpose of ContextVariabilityManager. My goal is to provide a modular, easy-to-use tool where modelers don’t need to understand the underlying Petri Net logic.
 
 Instead, I came up with a more intuitive way to handle mutual exclusivity while keeping the flexibility. As shown in the `Grinding` and `Brewing` example, users can define priorities and exclusivity easily, without needing to dive into Petri Net details.
 
