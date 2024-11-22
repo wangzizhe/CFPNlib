@@ -40,12 +40,12 @@ ContextWithConditionEvent lowLoad(
 );
 ```
 
-## Summary of Differences
+## Comparison
 
-| Aspect                    | **ContextVariabilityManager (Using Petri Nets)**             | **Direct Definition (Using `if/else` & `when`) in Modelica** |
-| ------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| **Modularity**            | High - Modular and encapsulated Petri Nets, better separation of concerns. | Low - Manual handling of conditions, more complex and less modular code. |
-| **Maintenance**           | High - Clear separation of contexts and conditions, easy to read and maintain. | Low - `if/else` chains clutter the code, hard to read and maintain. |
-| **Visualization**         | Can visualize Petri nets to understand state transitions.    | No built-in visualization for context transitions.           |
-| **Context Relationships** | Handles context relations (parent-child, inclusion, exclusion) elegantly. | Harder to manage, leading to redundant code.                 |
-| **Error Handling**        | Clear structure and isolated transitions make error handling more intuitive. | Errors may be harder to trace due to complex chains and nested conditions. |
+|          Aspect           |             **Using ContextVariabilityManager**              |                 **Using `if/else` & `when`**                 |
+| :-----------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+|      **Modularity**       | High - Modular and encapsulated Petri Nets, better separation of concerns. | Low - Manual handling of conditions, more complex and less modular code. |
+|      **Maintenance**      | High - Clear separation of contexts and conditions, easy to read and maintain. | Low - `if/else` chains clutter the code, hard to read and maintain. |
+|     **Visualization**     |  Can visualize Petri nets to understand state transitions.   |      No built-in visualization for context transitions.      |
+| **Context Relationships** | Handles context relations (parent-child, inclusion, exclusion) elegantly. |         Harder to manage, leading to redundant code.         |
+|    **Error Handling**     | Clear structure and isolated transitions make error handling more intuitive. | Errors may be harder to trace due to complex chains and nested conditions. |
